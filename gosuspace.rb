@@ -7,6 +7,8 @@ class Tutorial < Gosu::Window
 		# Fullscreen: super 640, 480, :fullscreen => true
 		super 800, 600 # How big window game is: 640 px wide & 480px high
 		self.caption = "The Badass Spacegame" # Puts title on the pop window
+		# Fetch and show background image in game window
+		@background_image = Gosu::Image.new("media/space.png", :tileable => true)
 	end
 	#updates the game when playing
 	def update

@@ -20,5 +20,28 @@ class Tutorial < Gosu::Window
 	end
 end
 
+# Class Player
+class Player
+	def initialize
+	end
+
+	def warp(x, y)
+	end
+
+	def turn_left
+	end
+
+	def turn_right
+	end
+
+	def accelerate
+	end
+
+	def move
+	end
+
+	def draw
+	end
+
 # Show game window
 Tutorial.new.show 

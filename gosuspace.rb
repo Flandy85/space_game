@@ -48,9 +48,16 @@ class Player
 
 	def move
 		@x += @vel_x
+		@y += @vel_y
+		@x %= 640
+		@y %= 480
+
+		@vel_x *= 0.95
+		@vel_y *= 0.95
 	end
 
 	def draw
+		@image.draw_rot(@x, @y, 1, @angle)
 	end
 
 # Show game window

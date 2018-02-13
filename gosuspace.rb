@@ -23,6 +23,10 @@ end
 # Class Player
 class Player
 	def initialize
+		#instance variables
+		@image = Gosu::Image.new("images/starfighter.bmp")
+		@x = @y = @vel_x = @vel_y = @angle = 0.0
+		@score = 0
 	end
 
 	def warp(x, y)

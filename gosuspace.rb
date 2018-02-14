@@ -1,6 +1,11 @@
 # Require ruby gosu library
 require 'gosu'
 
+# ZOrder module for background, stars, player
+module ZOrder
+	BACKGROUND, STARS, PLAYER, UI = *0..3
+end
+
 # Class Toturial with inheritance from Gosu
 class Tutorial < Gosu::Window
 	def initialize
@@ -10,11 +15,17 @@ class Tutorial < Gosu::Window
 		# Fetch and show background image in game window
 		@background_image = Gosu::Image.new("images/space.png", :tileable => true)
 
+		# Instance variables for player and stars
 		@player = Player.new
 		@player.warp(320, 240)
+
+		@star_anim = Gosu::Image.load_tiles("images/star.png", 25, 25)
+    	@stars = Array.new
+
+    	@font = Gosu::Font.new(25)
 	end
 
-	#updates the game when playing
+	#updates the game when playing user movment
 	def update
 		if Gosu.button_down? Gosu::KB_LEFT or Gosu::button_down? Gosu::GP_LEFT
 		  @player.turn_left
@@ -25,7 +36,13 @@ class Tutorial < Gosu::Window
 		if Gosu.button_down? Gosu::KB_UP or Gosu::button_down? Gosu::GP_BUTTON_0
 		  @player.accelerate
 		end
+
 		@player.move
+		@player.collect_stars(@stars)
+
+	    if rand(100) < 4 and @stars.size < 25
+	      @stars.push(Star.new(@star_anim))
+	    end
 	end
 	
 
@@ -33,9 +50,12 @@ class Tutorial < Gosu::Window
 	def draw
 		# Calls instance variable and draws it, the numbers its location where in the gamewindow shall space image be drawn
 		@player.draw
-		@background_image.draw(0, 0, 0)
+		@background_image.draw(0, 0, ZOrder::BACKGROUND)
+		@stars.each { |star| star.draw }
+		@font.draw("Your Score: #{@player.score}", 10, 10, ZOrder::UI, 1.0, 1.0, Gosu::Color::YELLOW)
 	end
 
+	# Close game window if escape button is pressed
 	def button_down(id)
 	    if id == Gosu::KB_ESCAPE
 	      close
@@ -47,9 +67,12 @@ end
 
 # Main Class Player
 class Player
+	attr_reader :score
+
 	def initialize
 		#instance variables
 		@image = Gosu::Image.new("images/starfighter.bmp")
+		@beep = Gosu::Sample.new("images/beep.wav")
 		@x = @y = @vel_x = @vel_y = @angle = 0.0
 		@score = 0
 	end
@@ -84,18 +107,22 @@ class Player
 	def draw
 		@image.draw_rot(@x, @y, 1, @angle)
 	end
+
+	def score
+		@score
+	end
+
+	def collect_stars(stars)
+		stars.reject! { |star| Gosu.distance(@x, @y, star.x, star.y) < 35 }
+	end
 end
 
-# ZOrder module for background, stars, player
-module ZOrder
-	BACKGROUND, STARS, PLAYER, UI = *0..3
-end
 
 # Star animation class
 class Star
 	attr_reader :x, :y
 
-	def initialize
+	def initialize(animation)
 		@animation = animation
 	    @color = Gosu::Color::BLACK.dup
 	    @color.red = rand(256 - 40) + 40 # Generate random color with red basis

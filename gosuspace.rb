@@ -26,8 +26,8 @@ class Tutorial < Gosu::Window
 		  @player.accelerate
 		end
 		@player.move
-		end
 	end
+	
 
 	# Rendrer game on to gamewindow
 	def draw
@@ -86,6 +86,11 @@ class Player
 	end
 end
 
+# ZOrder module for background, stars, player
+module ZOrder
+	BACKGROUND, STARS, PLAYER, UI = *0..3
+end
+
 # Star animation class
 class Star
 	attr_reader :x, :y
@@ -107,8 +112,6 @@ class Star
 	end
 end
 
-module ZOrder
-	BACKGROUND, STARS, PLAYER, UI = *0..3
-end
+
 # Show game window
 Tutorial.new.show 

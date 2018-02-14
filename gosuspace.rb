@@ -16,13 +16,32 @@ class Tutorial < Gosu::Window
 
 	#updates the game when playing
 	def update
+		if Gosu.button_down? Gosu::KB_LEFT or Gosu::button_down? Gosu::GP_LEFT
+		  @player.turn_left
+		end
+		if Gosu.button_down? Gosu::KB_RIGHT or Gosu::button_down? Gosu::GP_RIGHT
+		  @player.turn_right
+		end
+		if Gosu.button_down? Gosu::KB_UP or Gosu::button_down? Gosu::GP_BUTTON_0
+		  @player.accelerate
+		end
+		@player.move
+		end
 	end
-
 
 	# Rendrer game on to gamewindow
 	def draw
 		# Calls instance variable and draws it, the numbers its location where in the gamewindow shall space image be drawn
+		@player.draw
 		@background_image.draw(0, 0, 0)
+	end
+
+	def button_down(id)
+	    if id == Gosu::KB_ESCAPE
+	      close
+	    else
+	      super
+	    end
 	end
 end
 
@@ -70,13 +89,13 @@ end
 # Star animation class
 class Star
 	attr_reader :x, :y
-	
+
 	def initialize
 		@animation = animation
 	    @color = Gosu::Color::BLACK.dup
-	    @color.red = rand(256 - 40) + 40
-	    @color.green = rand(256 - 40) + 40
-	    @color.blue = rand(256 - 40) + 40
+	    @color.red = rand(256 - 40) + 40 # Generate random color with red basis
+	    @color.green = rand(256 - 40) + 40 # Generate random color with green basis
+	    @color.blue = rand(256 - 40) + 40 # Generate random color with blue basis
 	    @x = rand * 640
 	    @y = rand * 480
 	end

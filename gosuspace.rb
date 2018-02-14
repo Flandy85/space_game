@@ -9,10 +9,16 @@ class Tutorial < Gosu::Window
 		self.caption = "The Badass Spacegame" # Puts title on the pop window
 		# Fetch and show background image in game window
 		@background_image = Gosu::Image.new("images/space.png", :tileable => true)
+
+		@player = Player.new
+		@player.warp(320, 240)
 	end
+
 	#updates the game when playing
 	def update
 	end
+
+
 	# Rendrer game on to gamewindow
 	def draw
 		# Calls instance variable and draws it, the numbers its location where in the gamewindow shall space image be drawn
@@ -20,7 +26,7 @@ class Tutorial < Gosu::Window
 	end
 end
 
-# Class Player
+# Main Class Player
 class Player
 	def initialize
 		#instance variables
@@ -59,6 +65,28 @@ class Player
 	def draw
 		@image.draw_rot(@x, @y, 1, @angle)
 	end
+end
 
+# Star animation class
+class Star
+	attr_reader :x, :y
+	
+	def initialize
+		@animation = animation
+	    @color = Gosu::Color::BLACK.dup
+	    @color.red = rand(256 - 40) + 40
+	    @color.green = rand(256 - 40) + 40
+	    @color.blue = rand(256 - 40) + 40
+	    @x = rand * 640
+	    @y = rand * 480
+	end
+
+	def draw
+	end
+end
+
+module ZOrder
+	BACKGROUND, STARS, PLAYER, UI = *0..3
+end
 # Show game window
 Tutorial.new.show 
